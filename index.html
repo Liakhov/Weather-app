@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geolocation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+</head>
+<body>
+    <div class="container">
+        <div class="main-weater">
+            <img id="icon" src="#" alt="">
+            <p id="description"></p>
+        </div>
+        <div class="info">
+            <p id="temperature">0</p>
+            <p id="city">City</p>
+        </div>
+    </div>
+<!--    <script>
+        var lat, long,
+            message = document.getElementById('message');
+
+        if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationFailure)
+        }else{
+            message.innerText = 'Geolocation is not supported!';
+        }
+        function geolocationSuccess(position) {
+            lat = 'Ширина = ' + position.coords.latitude;
+            long = 'Длина = ' + position.coords.longitude;
+            console.log(lat);
+            console.log(long);
+
+        }
+        function geolocationFailure(positionError) {
+            var eror = positionError.code;
+            if ( eror === 1){
+                message.innerHTML = 'Вы отказались предоставить разрешение на установку местоположения.'
+            } else if(eror === 2){
+                message.innerHTML = 'Проблемы с подключением к интернету'
+            }else if(eror === 3){
+                message.innerHTML = 'Не удалось установить местоположение в течении установленого времени.'
+            }else {
+                message.innerHTML = 'Ошибка установить местоположение, попробуйте пожалуйста еще раз.'
+            }
+        }
+    </script>-->
+        <script>
+            function weater() {
+                // Координаты ипподрома
+                //lat  = '49.993499,',
+                //longit = '36.230376';
+                //b231606340553d9174136f7f083904b3
+
+                var apiKey = '5dd765a29b95b2e058dfd9f33a1dbd0d', // ключ для мгновенной погоды
+                    lat  = '49.993499,',
+                    longit = '36.230376';
+
+                $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=50.40345&lon=30.51336&appid=eaa7e82c7b7b116cf6466cb344bbff39" , function(data) {
+                    console.log(data['name']);
+                    console.log(data["main"]["pressure"]);
+                    console.log(data["wind"]["speed"]);
+                    var temp = (data["main"]["temp"] - 273);
+                    city.innerHTML = '&#9660; ' + data['name'];
+                    temperature.innerHTML = Math.round(temp)+ '&#176;';
+                    description.innerHTML = data['weather'][0].description;
+                    icon.src = 'https://openweathermap.org/img/w/03n.png';
+                })
+            }
+
+            document.addEventListener("DOMContentLoaded", weater);
+    </script>
+
+</body>
+</html>
