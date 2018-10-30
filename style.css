@@ -3,8 +3,12 @@
     padding: 0;
 }
 body{
-    background-color: #ffffff;
+    background: linear-gradient(to top, #17a68a, #82d490);
     min-height: 100vh;
+}
+p{
+    font-size: 16px;
+    line-height: 28px;
 }
 .container{
     display: block;
@@ -16,23 +20,21 @@ body{
     box-sizing: border-box;
     text-align: center;
     color: #555;
-    background: rgba(135, 206, 250, 0.5);
+    background: rgba(255, 255, 255, 1);
 }
-.info{
-    width: 60%;
-    float: right;
-    text-align: right;
-    overflow: hidden;
-
-}
-.main-weater{
-    width: 40%;
+.col{
+    width: 33.33%;
     float: left;
     overflow: hidden;
 }
+.left{
+    text-align: left;
+}
 #temperature{
     font-size: 60px;
+    line-height: 60px;
 }
 #city{
-    font-size: 16px;
+    font-size: 28px;
+    line-height: 68px;
 }
