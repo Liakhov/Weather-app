@@ -3,77 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Geolocation</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
-        <div class="col left">
-            <p id="city">City</p>
-            <p id="description"></p>
-            <p id="wind"></p>
-            <p id="cloud"></p>
-            <p id="presure"></p>
+        <div class="main">
+            <div class="col left">
+                <p id="city"></p>
+                <p id="description"></p>
+                <p id="wind"></p>
+                <p id="cloud"></p>
+                <p id="presure"></p>
+            </div>
+            <div class="col">
+                <img id="icon" src="#" alt="">
+            </div>
+            <div class="col right">
+                <p id="temperature"></p>
+                <p id="nowDate"></p>
+            </div>
         </div>
-        <div class="col">
-            <img id="icon" src="#" alt="">
-        </div>
-        <div class="col">
-            <p id="temperature">0</p>
+
+        <div class="days">
+            <div class="day-item">
+                <p class="day-title"></p>
+                <div class="icon">
+                </div>
+                <p class="day-temp">
+                    <span class="max-temp"></span>
+                </p>
+            </div>
+            <div class="day-item">
+                <p class="day-title"></p>
+                <div class="icon">
+                </div>
+                <p class="day-temp">
+                    <span class="max-temp"></span>
+                </p>
+            </div>
+            <div class="day-item">
+                <p class="day-title"></p>
+                <div class="icon">
+                </div>
+                <p class="day-temp">
+                    <span class="max-temp"></span>
+                </p>
+            </div>
+            <div class="day-item">
+                <p class="day-title"></p>
+                <div class="icon">
+                </div>
+                <p class="day-temp">
+                    <span class="max-temp"></span>
+                </p>
+            </div>
+            <div class="day-item">
+                <p class="day-title"></p>
+                <div class="icon">
+                </div>
+                <p class="day-temp">
+                    <span class="max-temp"></span>
+                </p>
+            </div>
         </div>
     </div>
-    <script>
-        var lats,
-            longs,
-            message = document.getElementById('message');
 
-        if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationFailure)
-        }else{
-            message.innerText = 'Geolocation is not supported!';
-        }
 
-        function geolocationSuccess(position) {
-            lats = position.coords.latitude;
-            longs = position.coords.longitude;
-            weather(lats,longs);
-        }
-        function weather() {
-            var xhr = new XMLHttpRequest(),
-                key = 'eaa7e82c7b7b116cf6466cb344bbff39';
-
-            xhr.open('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lats + '&lon=' + longs + '&appid=' + key, false);
-
-            xhr.send();
-
-            if (xhr.status != 200) {
-                // обработать ошибку
-                alert( 'Eror ' + xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
-            } else {
-                var result = JSON.parse(xhr.responseText);
-                displayWeather(result);
-            }
-        }
-        function geolocationFailure(positionError) {
-            var eror = positionError.code;
-            if ( eror === 1){
-                message.innerHTML = 'Вы отказались предоставить разрешение на установку местоположения.'
-            } else if(eror === 2){
-                message.innerHTML = 'Проблемы с подключением к интернету'
-            }else if(eror === 3){
-                message.innerHTML = 'Не удалось установить местоположение в течении установленого времени.'
-            }else {
-                message.innerHTML = 'Ошибка установить местоположение, попробуйте пожалуйста еще раз.'
-            }
-        }
-
-        function displayWeather(result) {
-            city.innerHTML = result.city.name;
-            console.log(result);
-
-            result.list.forEach(function(item) {
-                console.log('Время: ' + item.dt_txt + ' Температура: ' +  item.main.temp);
-            });
-        }
-    </script>
+    <script src="js/main.js"></script>
 </body>
 </html>

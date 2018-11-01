@@ -13,8 +13,8 @@ p{
 .container{
     display: block;
     width: 100%;
-    max-width: 500px;
-    min-height: 350px;
+    max-width: 600px;
+    min-height: 400px;
     margin: 150px auto 0;
     padding: 20px 25px;
     box-sizing: border-box;
@@ -29,6 +29,17 @@ p{
 }
 .left{
     text-align: left;
+}
+.right{
+    text-align: right;
+}
+.main{
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.day-item{
+    width: 20%;
+    float: left;
 }
 #temperature{
     font-size: 60px;
