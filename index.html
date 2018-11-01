@@ -39,27 +39,21 @@
             weather(lats,longs);
         }
         function weather() {
-            $.get(
-                "https://api.openweathermap.org/data/2.5/weather",
-                {
-                    "lat": lats,
-                    "lon": longs,
-                    "appid": "eaa7e82c7b7b116cf6466cb344bbff39"
+            var xhr = new XMLHttpRequest(),
+                key = 'eaa7e82c7b7b116cf6466cb344bbff39';
 
-                },
-                function (data) {
-                    city.innerHTML = data.name;
-                    temperature.innerHTML = Math.round(data.main.temp - 273) + '&#176';
-                    description.innerHTML = data.weather[0].description;
-                    wind.innerHTML = "Wind = " + data.wind.speed + ' m/s';
-                    cloud.innerHTML = 'Clouds: ' +  data.clouds.all;
-                    presure.innerHTML = 'Presure ' + data.main.pressure + ' hPa';
-                    icon.src = 'https://openweathermap.org/img/w/' + data.weather[0].icon + '.png';
-                    console.log(data);
-                }
-            );
+            xhr.open('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lats + '&lon=' + longs + '&appid=' + key, false);
+
+            xhr.send();
+
+            if (xhr.status != 200) {
+                // обработать ошибку
+                alert( 'Eror ' + xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+            } else {
+                var result = JSON.parse(xhr.responseText);
+                displayWeather(result);
+            }
         }
-
         function geolocationFailure(positionError) {
             var eror = positionError.code;
             if ( eror === 1){
@@ -71,6 +65,11 @@
             }else {
                 message.innerHTML = 'Ошибка установить местоположение, попробуйте пожалуйста еще раз.'
             }
+        }
+
+        function displayWeather(result) {
+            city.innerHTML = result.city.name;
+            console.log(result);
         }
     </script>
 </body>
