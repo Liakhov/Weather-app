@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Geolocation</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
 </head>
 <body>
     <div class="container">
@@ -70,6 +69,10 @@
         function displayWeather(result) {
             city.innerHTML = result.city.name;
             console.log(result);
+
+            result.list.forEach(function(item) {
+                console.log('Время: ' + item.dt_txt + ' Температура: ' +  item.main.temp);
+            });
         }
     </script>
 </body>
