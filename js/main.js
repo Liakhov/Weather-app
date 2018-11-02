@@ -4,9 +4,10 @@ var lats, longs, tempDate,
     arrDays = document.querySelectorAll('.day-item');
 
 var options = {
-    month: 'long',
+    weekday: 'long',
     day: 'numeric',
-    weekday: 'long'
+    month: 'long'
+
 };
 var optionss = {
     weekday: 'short'

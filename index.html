@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Geolocation</title>
+    <title>Weather</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <p id="city"></p>
+            <p id="nowDate"></p>
+        </div>
         <div class="main">
             <div class="col left">
-                <p id="city"></p>
                 <p id="description"></p>
                 <p id="wind"></p>
                 <p id="cloud"></p>
@@ -20,7 +23,7 @@
             </div>
             <div class="col right">
                 <p id="temperature"></p>
-                <p id="nowDate"></p>
+
             </div>
         </div>
 
@@ -67,8 +70,6 @@
             </div>
         </div>
     </div>
-
-
     <script src="js/main.js"></script>
 </body>
 </html>

@@ -3,7 +3,8 @@
     padding: 0;
 }
 body{
-    background: linear-gradient(to top, #17a68a, #82d490);
+    /*background: linear-gradient(to top, #17a68a, #82d490);*/
+    background: rgba(136, 204, 233, 0.3);
     min-height: 100vh;
 }
 p{
@@ -19,8 +20,9 @@ p{
     padding: 20px 25px;
     box-sizing: border-box;
     text-align: center;
-    color: #555;
-    background: rgba(255, 255, 255, 1);
+    color: #ffffff;
+    box-shadow: 2px 3px 10px #38abca;
+    background: rgba(57, 174, 207, 0.5);
 }
 .col{
     width: 33.33%;
@@ -35,17 +37,30 @@ p{
 }
 .main{
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
+}
+.days{
+    overflow: hidden;
+    padding: 30px 0 0;
 }
 .day-item{
     width: 20%;
-    float: left;
+    display: inline-block;
 }
 #temperature{
     font-size: 60px;
     line-height: 60px;
 }
+.header{
+    overflow: hidden;
+    margin-bottom: 20px;
+}
 #city{
+    float: left;
     font-size: 28px;
+    line-height: 68px;
+}
+#nowDate{
+    float: right;
     line-height: 68px;
 }
