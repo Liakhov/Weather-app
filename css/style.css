@@ -78,6 +78,15 @@ p{
 #location{
     cursor: pointer;
 }
+.icon{
+    margin: 5px 0;
+}
+.icon img{
+    height: 41px;
+}
+.min-temp{
+    color: #bababa;
+}
 .rain,
 .presure,
 .humidity,

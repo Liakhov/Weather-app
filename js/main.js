@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function(){
         message = document.getElementById('message'),
         arrDays = document.querySelectorAll('.day-item'),
         location = document.getElementById('location'),
+        currentDate = document.getElementById('currentDate'),
         key = 'eaa7e82c7b7b116cf6466cb344bbff39',
         lats = lats || 50.44,
         longs = longs || 30.51;
@@ -13,12 +14,8 @@ document.addEventListener('DOMContentLoaded', function(){
         month: 'long'
 
     };
-    var optionss = {
-        weekday: 'short'
-    };
 
-
-    function weather() {
+    function weather(){
         var xhr = new XMLHttpRequest();
 
         xhr.open('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lats + '&lon=' + longs + '&appid=' + key, false);
@@ -63,9 +60,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function displayWeather(result) {
         var nowDate = new Date(result.list[0].dt * 1000),
+            arrDisplayDate = [],
             arrlistDay = [], // Масив для вывода возможных дат
             temtpDateDay = ''; // Временная переменная для сравнения даты
-
 
         // Выводим в HTML текущую погоду
         city.innerHTML = result.city.name;
@@ -76,45 +73,54 @@ document.addEventListener('DOMContentLoaded', function(){
         presure.innerHTML = result.list[0].main.pressure + ' Pa';
         humidity.innerHTML = result.list[0].main.humidity + ' %';
         tempDate = new Date(result.list[0].dt * 1000);
-        nowDate.innerHTML = tempDate.toLocaleString("en", options);
+        currentDate.innerHTML = tempDate.toLocaleString("en", options);
 
         console.log(result);
 
         //Масив возможных дат
         result.list.forEach(function (item) {
-            var test = new Date(item.dt * 1000);
+            var date = new Date(item.dt * 1000);
 
-            if(temtpDateDay != test.getDate()){
-                arrlistDay.push(test.getDate());
-                temtpDateDay = test.getDate();
+            if(temtpDateDay != date.getDate()){
+                arrlistDay.push(date.getDate());
+                temtpDateDay = date.getDate();
+
+                arrDisplayDate.push(date.toLocaleString('en', {weekday: 'short'}));
             }
         });
-
         //Start// Получаем минимальную и максимальную температуру за сутки по каждой дате массива arrlistDay
-
         for(var i = 0; i < arrlistDay.length; i++ ){
             var maximumDayTemperature = 0,
-                minimumDayTemperature = 0;
+                minimumDayTemperature = 0,
+                iconName = '',
+                img = document.createElement('IMG');
 
             result.list.forEach(function(item) {
-
                 var time = new Date(item.dt * 1000);
 
                 if(arrlistDay[i] === time.getDate()){
+
                     if(Math.floor(item.main.temp_max - 273) > maximumDayTemperature){
                         maximumDayTemperature = Math.floor(item.main.temp_max - 273);
-                    }
-                    if(Math.floor(item.main.temp_min - 273) < minimumDayTemperature){
+                        iconName = item.weather[0].icon;
+                    }else if(Math.floor(item.main.temp_min - 273) < minimumDayTemperature){
                         minimumDayTemperature = Math.floor(item.main.temp_min - 273);
                     }
                 }
+                iconName = iconName || item.weather[0].icon; // Проверка на присвоение иконки (актуально для первого елемента, он не входит в условие)
             });
-            console.log( 'Дата =  ' + arrlistDay[i] + ' Max Temp' +  maximumDayTemperature + ' Min Temp = ' + minimumDayTemperature);
+            ;
+            document.getElementsByClassName('day-title')[i].innerText = arrDisplayDate[i];
+            document.getElementsByClassName('icon')[i].appendChild(img);
+            img.src = 'img/' + iconName + '.png';
+            document.getElementsByClassName('max-temp')[i].innerHTML = maximumDayTemperature + '&#176 C';
+            document.getElementsByClassName('min-temp')[i].innerHTML = minimumDayTemperature + '&#176 C';
+
         }
         //Finish// Получаем минимальную и максимальную температуру за сутки
     };
-
     weather();
+
 });
 
 
