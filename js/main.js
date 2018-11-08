@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', function(){
     var tempDate,
         message = document.getElementById('message'),
         arrDays = document.querySelectorAll('.day-item'),
-        location = document.getElementById('location');
+        location = document.getElementById('location'),
+        key = 'eaa7e82c7b7b116cf6466cb344bbff39',
+        lats = lats || 50.44,
+        longs = longs || 30.51;
 
     var options = {
         weekday: 'long',
@@ -14,9 +17,6 @@ document.addEventListener('DOMContentLoaded', function(){
         weekday: 'short'
     };
 
-    var key = 'eaa7e82c7b7b116cf6466cb344bbff39',
-        lats = lats || 50.44,
-        longs = longs || 30.51;
 
     function weather() {
         var xhr = new XMLHttpRequest();
@@ -62,7 +62,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
     function displayWeather(result) {
-        var l = 0;  // Нумерация для записи HTML по дням
+        var nowDate = new Date(result.list[0].dt * 1000),
+            arrlistDay = [], // Масив для вывода возможных дат
+            temtpDateDay = ''; // Временная переменная для сравнения даты
+
 
         // Выводим в HTML текущую погоду
         city.innerHTML = result.city.name;
@@ -75,31 +78,41 @@ document.addEventListener('DOMContentLoaded', function(){
         tempDate = new Date(result.list[0].dt * 1000);
         nowDate.innerHTML = tempDate.toLocaleString("en", options);
 
-
         console.log(result);
 
-        // Перебор массива
-        result.list.forEach(function(item, i) {
-            var nameDay = arrDays[l].querySelector('.day-title'),
-                dataImg = arrDays[l].querySelector('.icon'),
-                maxDayTemp = arrDays[l].querySelector('.max-temp');
-                minDayTemp = arrDays[l].querySelector('.min-temp');
+        //Масив возможных дат
+        result.list.forEach(function (item) {
+            var test = new Date(item.dt * 1000);
 
-            var datesset = new Date(result.list[i].dt * 1000); // время для данного item-a
-
-            if(tempDate.getDate() != datesset.getDate() ){
-                tempDate = datesset;
-                var dateFormat = new Date(item.dt * 1000);
-
-
-                nameDay.innerText = dateFormat.toLocaleString("ru", optionss);
-                dataImg.innerHTML = '<img src=img/' + item.weather[0].icon + '.png' + '>';
-                maxDayTemp.innerHTML = Math.floor(item.main.temp_max - 273) + '&#176;';
-                minDayTemp.innerHTML = Math.floor(item.main.temp_min - 273) + '&#176;';
-                l++;
+            if(temtpDateDay != test.getDate()){
+                arrlistDay.push(test.getDate());
+                temtpDateDay = test.getDate();
             }
         });
-    }
+
+        //Start// Получаем минимальную и максимальную температуру за сутки по каждой дате массива arrlistDay
+
+        for(var i = 0; i < arrlistDay.length; i++ ){
+            var maximumDayTemperature = 0,
+                minimumDayTemperature = 0;
+
+            result.list.forEach(function(item) {
+
+                var time = new Date(item.dt * 1000);
+
+                if(arrlistDay[i] === time.getDate()){
+                    if(Math.floor(item.main.temp_max - 273) > maximumDayTemperature){
+                        maximumDayTemperature = Math.floor(item.main.temp_max - 273);
+                    }
+                    if(Math.floor(item.main.temp_min - 273) < minimumDayTemperature){
+                        minimumDayTemperature = Math.floor(item.main.temp_min - 273);
+                    }
+                }
+            });
+            console.log( 'Дата =  ' + arrlistDay[i] + ' Max Temp' +  maximumDayTemperature + ' Min Temp = ' + minimumDayTemperature);
+        }
+        //Finish// Получаем минимальную и максимальную температуру за сутки
+    };
 
     weather();
 });
