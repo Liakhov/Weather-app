@@ -1,43 +1,34 @@
 document.addEventListener('DOMContentLoaded', function(){
     var tempDate,
         message = document.getElementById('message'),
-        arrDays = document.querySelectorAll('.day-item'),
         location = document.getElementById('location'),
+        city = document.getElementById('city'),
         currentDate = document.getElementById('currentDate'),
         key = 'eaa7e82c7b7b116cf6466cb344bbff39',
         lats = lats || 50.44,
-        longs = longs || 30.51;
-
-    var options = {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long'
-
-    };
+        longs = longs || 30.51,
+        dayTitle = document.getElementsByClassName('day-title'),
+        minTemp = document.getElementsByClassName('min-temp'),
+        maxTemp = document.getElementsByClassName('max-temp'),
+        icon = document.getElementsByClassName('icon');
 
     function weather(){
         var xhr = new XMLHttpRequest();
-
-        xhr.open('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lats + '&lon=' + longs + '&appid=' + key, false);
-
+        xhr.open('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lats + '&lon=' + longs + '&lang=ru' +  '&appid=' + key, false);
         xhr.send();
-        if (xhr.status != 200) {
-            // обработать ошибку
+        if (xhr.status != 200) {   // обработать ошибку
             alert('Eror ' + xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
         } else {
             var result = JSON.parse(xhr.responseText);
-
             displayWeather(result);
         }
     }
-
     location.onclick = function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationFailure);
         } else {
             message.innerText = 'Geolocation is not supported!';
         }
-
         function geolocationSuccess(position) {
             lats = position.coords.latitude;
             longs = position.coords.longitude;
@@ -57,49 +48,42 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     };
 
-
     function displayWeather(result) {
-        var nowDate = new Date(result.list[0].dt * 1000),
-            arrDisplayDate = [],
+        var arrDisplayDate = [],
             arrlistDay = [], // Масив для вывода возможных дат
             temtpDateDay = ''; // Временная переменная для сравнения даты
 
         // Выводим в HTML текущую погоду
         city.innerHTML = result.city.name;
         temperature.innerHTML = Math.floor(result.list[0].main.temp_max - 273) + '&#176;';
-        icon.src = 'img/' + result.list[0].weather[0].icon + '.png';
+        mainIcon.src = 'img/' + result.list[0].weather[0].icon + '.png';
         description.innerHTML = result.list[0].weather[0].description;
         wind.innerHTML = result.list[0].wind.speed + ' m/s';
         presure.innerHTML = result.list[0].main.pressure + ' Pa';
         humidity.innerHTML = result.list[0].main.humidity + ' %';
         tempDate = new Date(result.list[0].dt * 1000);
-        currentDate.innerHTML = tempDate.toLocaleString("en", options);
+        currentDate.innerHTML = tempDate.toLocaleString("ru", {weekday: 'long', day: 'numeric', month: 'long'});
 
         console.log(result);
 
-        //Масив возможных дат
+        //Заполняем массив для 5 дней недели
         result.list.forEach(function (item) {
             var date = new Date(item.dt * 1000);
-
             if(temtpDateDay != date.getDate()){
                 arrlistDay.push(date.getDate());
                 temtpDateDay = date.getDate();
-
-                arrDisplayDate.push(date.toLocaleString('en', {weekday: 'short'}));
+                arrDisplayDate.push(date.toLocaleString('ru', {weekday: 'short'}));
             }
         });
-        //Start// Получаем минимальную и максимальную температуру за сутки по каждой дате массива arrlistDay
-        for(var i = 0; i < arrlistDay.length; i++ ){
+        //Start// Получаем минимальную и максимальную температуру за сутки
+        for(var i = 0; i < arrlistDay.length; i++){
             var maximumDayTemperature = 0,
                 minimumDayTemperature = 0,
-                iconName = '',
-                img = document.createElement('IMG');
+                iconName = '';
 
             result.list.forEach(function(item) {
                 var time = new Date(item.dt * 1000);
-
                 if(arrlistDay[i] === time.getDate()){
-
                     if(Math.floor(item.main.temp_max - 273) > maximumDayTemperature){
                         maximumDayTemperature = Math.floor(item.main.temp_max - 273);
                         iconName = item.weather[0].icon;
@@ -109,18 +93,15 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
                 iconName = iconName || item.weather[0].icon; // Проверка на присвоение иконки (актуально для первого елемента, он не входит в условие)
             });
-            ;
-            document.getElementsByClassName('day-title')[i].innerText = arrDisplayDate[i];
-            document.getElementsByClassName('icon')[i].appendChild(img);
-            img.src = 'img/' + iconName + '.png';
-            document.getElementsByClassName('max-temp')[i].innerHTML = maximumDayTemperature + '&#176 C';
-            document.getElementsByClassName('min-temp')[i].innerHTML = minimumDayTemperature + '&#176 C';
-
+            //Записываем в HTML данные по каждому дню
+            dayTitle[i].innerHTML = arrDisplayDate[i];
+            icon[i].getElementsByTagName('IMG')[0].src = 'img/' + iconName + '.png';
+            maxTemp[i].innerHTML = maximumDayTemperature + '&#176 C';
+            minTemp[i].innerHTML = minimumDayTemperature + '&#176 C';
         }
         //Finish// Получаем минимальную и максимальную температуру за сутки
     };
     weather();
-
 });
 
 

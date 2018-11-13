@@ -4,7 +4,6 @@
     font-family: sans-serif;
 }
 body{
-    background-color: #fafbfe;
     color: #495057;
 }
 p{
@@ -21,6 +20,7 @@ p{
     background-color: white;
     -webkit-box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
     box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
+    border: 1px solid #eee;
 
 }
 .left{
@@ -63,6 +63,15 @@ p{
     justify-content: space-around;
     text-align: center;
     flex-grow: 1;
+}
+.day-item{
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+.day-item:hover{
+    border: 1px solid #eee;
+    box-shadow: 0 0 5px 0 rgba(154,161,171,.15);
 }
 #temperature{
     font-size: 60px;
