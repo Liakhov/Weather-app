@@ -5,12 +5,12 @@ document.addEventListener('DOMContentLoaded', function(){
         city = document.getElementById('city'),
         currentDate = document.getElementById('currentDate'),
         key = 'eaa7e82c7b7b116cf6466cb344bbff39',
-        lats = lats || 50.44,
+        lats = lats || 28.44,
         longs = longs || 30.51,
         dayTitle = document.getElementsByClassName('day-title'),
         minTemp = document.getElementsByClassName('min-temp'),
         maxTemp = document.getElementsByClassName('max-temp'),
-        icon = document.getElementsByClassName('icon');
+        icons = document.getElementsByClassName('icon');
 
     function weather(){
         var xhr = new XMLHttpRequest();
@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
         //Заполняем массив для 5 дней недели
         result.list.forEach(function (item) {
+
             var date = new Date(item.dt * 1000);
             if(temtpDateDay != date.getDate()){
                 arrlistDay.push(date.getDate());
@@ -77,33 +78,29 @@ document.addEventListener('DOMContentLoaded', function(){
         });
         //Start// Получаем минимальную и максимальную температуру за сутки
         for(var i = 0; i < arrlistDay.length; i++){
-            var maximumDayTemperature = 0,
-                minimumDayTemperature = 0,
-                iconName = '';
+            var maximumDayTemperature = '', minimumDayTemperature = '', iconName = '';
 
             result.list.forEach(function(item) {
                 var time = new Date(item.dt * 1000);
                 if(arrlistDay[i] === time.getDate()){
-                    if(Math.floor(item.main.temp_max - 273) > maximumDayTemperature){
-                        maximumDayTemperature = Math.floor(item.main.temp_max - 273);
+                    if(item.main.temp_max > maximumDayTemperature || maximumDayTemperature.length === 0){
+                        maximumDayTemperature = item.main.temp_max;
                         iconName = item.weather[0].icon;
-                    }else if(Math.floor(item.main.temp_min - 273) < minimumDayTemperature){
-                        minimumDayTemperature = Math.floor(item.main.temp_min - 273);
+                    }
+                    if(item.main.temp_min < minimumDayTemperature || minimumDayTemperature.length === 0){
+                        minimumDayTemperature = item.main.temp_min;
                     }
                 }
-                iconName = iconName || item.weather[0].icon; // Проверка на присвоение иконки (актуально для первого елемента, он не входит в условие)
+               // iconName = iconName || item.weather[0].icon; // Проверка на присвоение иконки (актуально для первого елемента, он не входит в условие)
             });
             //Записываем в HTML данные по каждому дню
             dayTitle[i].innerHTML = arrDisplayDate[i];
-            icon[i].getElementsByTagName('IMG')[0].src = 'img/' + iconName + '.png';
-            maxTemp[i].innerHTML = maximumDayTemperature + '&#176 C';
-            minTemp[i].innerHTML = minimumDayTemperature + '&#176 C';
+            icons[i].getElementsByTagName('IMG')[0].src = 'img/' + iconName + '.png';
+            maxTemp[i].innerHTML = Math.floor(maximumDayTemperature - 273) + '&#176 C';
+            minTemp[i].innerHTML = Math.floor(minimumDayTemperature - 273) + '&#176 C';
         }
         //Finish// Получаем минимальную и максимальную температуру за сутки
     };
     weather();
 });
-
-
-
 
