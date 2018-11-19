@@ -43,7 +43,7 @@ p{
 }
 .header img{
     height: 25px;
-    margin-left: 20px;
+    margin-left: 10px;
 }
 .main{
     display: flex;
@@ -111,4 +111,28 @@ p{
 .geoposition img{
     height: 25px;
     margin-right: 10px;
+}
+.form{
+    position: relative;
+    width: 150px;
+    box-sizing: border-box;
+}
+.form input{
+    width: 150px;
+    padding: .25rem .7rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: .2rem;
+    box-sizing: border-box;
+}
+#dropdown-list{
+    position: absolute;
+    width: 100%;
+    padding: 10px 5px;
+    list-style: 18px;
+    text-align: left;
+    background-color: white;
+    list-style: none;
 }

@@ -10,7 +10,10 @@ document.addEventListener('DOMContentLoaded', function(){
         dayTitle = document.getElementsByClassName('day-title'),
         minTemp = document.getElementsByClassName('min-temp'),
         maxTemp = document.getElementsByClassName('max-temp'),
-        icons = document.getElementsByClassName('icon');
+        icons = document.getElementsByClassName('icon'),
+        citytXml = '',
+        input = document.getElementById('myInput'),
+        dropdownList = document.getElementById('dropdown-list');
 
     function weather(){
         var xhr = new XMLHttpRequest();
@@ -22,7 +25,17 @@ document.addEventListener('DOMContentLoaded', function(){
             var result = JSON.parse(xhr.responseText);
             displayWeather(result);
         }
-    }
+    };
+
+    function citys() {
+        var xmlDoc = new XMLHttpRequest();
+        xmlDoc.open('GET', 'js/city.xml', true);
+        xmlDoc.send();
+        xmlDoc.onreadystatechange = function(){
+            citytXml = xmlDoc.responseXML;
+        }
+    };
+
     location.onclick = function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationFailure);
@@ -77,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         });
         //Start// Получаем минимальную и максимальную температуру за сутки
-        for(var i = 0; i < arrlistDay.length; i++){
+        for(var i = 0; i < arrlistDay.length - 1; i++){
             var maximumDayTemperature = '', minimumDayTemperature = '', iconName = '';
 
             result.list.forEach(function(item) {
@@ -102,5 +115,45 @@ document.addEventListener('DOMContentLoaded', function(){
         //Finish// Получаем минимальную и максимальную температуру за сутки
     };
     weather();
+    citys();
+
+
+    function searchCity(seachText) {
+        var cities = citytXml.getElementsByTagName('city'),
+            resultSearch = [];
+
+        for(var k = 0; k < cities.length; k++){
+            var atr = cities[k].getAttribute('name').toLowerCase();
+
+            if(atr.indexOf(seachText) === 0){
+                //console.log(atr);
+                resultSearch.push(atr);
+            }
+
+        }
+        
+        showResultSearch(resultSearch);
+    }
+    input.addEventListener('keyup', function() {
+        var removeListSearch = dropdownList.getElementsByTagName('li');
+        if(removeListSearch.length != 0){
+            for(var n = 0; n < removeListSearch.length; n++){
+                dropdownList.removeChild(removeListSearch[n]);
+            }
+        }
+        if(input.value.length >= 1){
+            var seachText = input.value.toLowerCase();
+            searchCity(seachText);
+        }
+    });
+    function showResultSearch(resultSearch) {
+        for(var m = 0; m < resultSearch.length; m++){
+            var li = document.createElement('li');
+            li.innerText = resultSearch[m];
+            dropdownList.appendChild(li);
+        }
+
+        console.log(resultSearch);
+    }
 });
 
