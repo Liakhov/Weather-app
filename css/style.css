@@ -136,3 +136,8 @@ p{
     background-color: white;
     list-style: none;
 }
+#dropdown-list li{
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 24px;
+}

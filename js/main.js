@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
         //Заполняем массив для 5 дней недели
         result.list.forEach(function (item) {
-
             var date = new Date(item.dt * 1000);
             if(temtpDateDay != date.getDate()){
                 arrlistDay.push(date.getDate());
@@ -104,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function(){
                         minimumDayTemperature = item.main.temp_min;
                     }
                 }
-               // iconName = iconName || item.weather[0].icon; // Проверка на присвоение иконки (актуально для первого елемента, он не входит в условие)
             });
             //Записываем в HTML данные по каждому дню
             dayTitle[i].innerHTML = arrDisplayDate[i];
@@ -117,43 +115,55 @@ document.addEventListener('DOMContentLoaded', function(){
     weather();
     citys();
 
-
     function searchCity(seachText) {
         var cities = citytXml.getElementsByTagName('city'),
-            resultSearch = [];
+            resultSearch = [],
+            resultsLat = [],
+            resultsLon = [];
 
         for(var k = 0; k < cities.length; k++){
             var atr = cities[k].getAttribute('name').toLowerCase();
+            var lat = cities[k].getAttribute('lat');
+            var lon =  cities[k].getAttribute('lon');
 
             if(atr.indexOf(seachText) === 0){
-                //console.log(atr);
                 resultSearch.push(atr);
-            }
+                resultsLat.push(lat);
+                resultsLon.push(lon);
 
+            }
         }
-        
-        showResultSearch(resultSearch);
+        showResultSearch(resultSearch, resultsLat, resultsLon);
     }
     input.addEventListener('keyup', function() {
-        var removeListSearch = dropdownList.getElementsByTagName('li');
-        if(removeListSearch.length != 0){
-            for(var n = 0; n < removeListSearch.length; n++){
-                dropdownList.removeChild(removeListSearch[n]);
-            }
-        }
-        if(input.value.length >= 1){
+        dropdownList.innerHTML = '';
+        if(input.value.length){
             var seachText = input.value.toLowerCase();
             searchCity(seachText);
         }
     });
-    function showResultSearch(resultSearch) {
+    function showResultSearch(resultSearch, resultsLat, resultsLon) {
+
         for(var m = 0; m < resultSearch.length; m++){
             var li = document.createElement('li');
+            li.setAttribute('data-lon', resultsLon[m]) ;
+            li.setAttribute('data-lat', resultsLat[m]) ;
             li.innerText = resultSearch[m];
             dropdownList.appendChild(li);
         }
-
         console.log(resultSearch);
     }
+
+    dropdownList.onclick = function (event) {
+        var target = event.target;
+
+        longs = target.getAttribute('data-lon');
+        lats = target.getAttribute('data-lat');
+        weather(lats, longs);
+
+        dropdownList.innerHTML = '';
+    }
+
+
 });
 
