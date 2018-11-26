@@ -44,6 +44,7 @@ p{
 .header img{
     height: 25px;
     margin-left: 10px;
+    align-items: center;
 }
 .main{
     display: flex;
@@ -93,6 +94,9 @@ p{
 .icon img{
     height: 41px;
 }
+.max-temp{
+    margin-right: 2px;
+}
 .min-temp{
     color: #bababa;
 }
@@ -126,6 +130,7 @@ p{
     border: 1px solid #ced4da;
     border-radius: .2rem;
     box-sizing: border-box;
+    outline: none;
 }
 #dropdown-list{
     display: none;

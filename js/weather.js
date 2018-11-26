@@ -40,7 +40,7 @@ var weather = {
 
         this.displayDaysWeather();
 
-        for(var i = 0; i < this.week.length - 1; i++){
+        for(var i = 0; i < this.week.length; i++){
 
             dayTitle[i].innerHTML = this.week[i].toLocaleString('ru', {weekday: 'short'});
             icons[i].getElementsByTagName('IMG')[0].src = 'img/' + this.iconWeek[i] + '.png';
@@ -49,18 +49,10 @@ var weather = {
         }
     },
     displayDaysWeather: function () {
-            var temtpDateDay = '';
+            this.getWeek();
 
-            this.resultWeatherRequest.list.forEach(function (item) {
-                var date = new Date(item.dt * 1000);
-                if(temtpDateDay != date.getDate()){
-                    weather.week.push(date);
-                    temtpDateDay = date.getDate();
-                }
-            });
-
-            //Start// Получаем минимальную и максимальную температуру за сутки
-            for(var i = 0; i < this.week.length - 1; i++){
+            // Получаем минимальную и максимальную температуру за сутки, иконки
+            for(var i = 0; i < this.week.length; i++){
                 var maximumDayTemperature = '', minimumDayTemperature = '', iconName = '';
 
                 this.resultWeatherRequest.list.forEach(function(item) {
@@ -79,8 +71,6 @@ var weather = {
                 weather.minimumWeekTemp.push(minimumDayTemperature);
                 weather.iconWeek.push(iconName);
             }
-            //Finish// Получаем минимальную и максимальную температуру за сутки
-
     },
     setLocation: function(){
         if (navigator.geolocation) {
@@ -105,6 +95,17 @@ var weather = {
                 message.innerHTML = 'Ошибка установить местоположение, попробуйте пожалуйста еще раз.'
             }
         }
+    },
+    getWeek: function () {
+        var temtpDateDay = '';
+
+        this.resultWeatherRequest.list.forEach(function (item) {
+            var date = new Date(item.dt * 1000);
+            if(temtpDateDay != date.getDate()){
+                weather.week.push(date);
+                temtpDateDay = date.getDate();
+            }
+        });
     },
     convertTemperature: function(valueTemp){
         return (this.temperatureUnit === 'C') ?  Math.floor(valueTemp - 273) :  Math.floor(valueTemp - 241);
