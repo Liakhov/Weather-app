@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -42,8 +43,11 @@
             <div class="col">
                 <img id="mainIcon" alt="location">
             </div>
-            <div class="col">
-                <p id="temperature"></p>
+            <div class="col right">
+                <span id="temperature"></span>
+                <span class="units">
+                    <span id='farengeit'>&#8457;</span> | <span id="celsium">&#8451;</span>
+                </span>
                 <p id="description"></p>
             </div>
         </div>
@@ -100,6 +104,6 @@
             </div>
         </div>
     </div>
-    <script src="js/main.js"></script>
+    <script src="js/weather.js"></script>
 </body>
 </html>
