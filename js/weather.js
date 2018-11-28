@@ -1,88 +1,68 @@
-var weather = {
-    lats: '46.469391',
-    longs:  '30.740883',
-    key: 'eaa7e82c7b7b116cf6466cb344bbff39',
-    citytXml : '',
-    temperatureUnit: 'C',
-    week: [],
-    resultWeatherRequest: {},
-    maximumWeekTemp: [],
-    minimumWeekTemp: [],
-    iconWeek: [],
-    weatherRequest: function(){
+function Weather() {
+    var KEY = 'eaa7e82c7b7b116cf6466cb344bbff39',
+        self = this,
+        week = [],
+        lats = 46.469391,
+        longs = 30.740883,
+        maximumWeekTemp = [],
+        minimumWeekTemp = [],
+        citytXml = [],
+        iconWeek = [],
+        input = document.getElementById('myInput'),
+        dropdownList = document.getElementById('dropdown-list');
+        this.temperatureUnit = 'C';
+        this.resultWeatherRequest = {};
+
+    function weatherRequest() {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' + this.lats + '&lon=' + this.longs + '&lang=ru' +  '&appid=' + this.key, false);
+        xhr.open('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lats + '&lon=' + longs + '&lang=ru' + '&appid=' + KEY, false);
         xhr.send();
-        if (xhr.status != 200) {   // обработать ошибку
+        if (xhr.status != 200) { // обработать ошибку
             alert('Eror ' + xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
         } else {
             var result = JSON.parse(xhr.responseText);
-            this.resultWeatherRequest = result;
-            this.displayWeather();
+            self.resultWeatherRequest = result;
+            displayMainWeather();
         }
-    },
-    displayWeather: function(){
+    };
+
+    function displayMainWeather() {
         var icons = document.getElementsByClassName('icon'),
             dayTitle = document.getElementsByClassName('day-title'),
             minTemp = document.getElementsByClassName('min-temp'),
-            maxTemp = document.getElementsByClassName('max-temp'),
-            data = this.resultWeatherRequest;
+            maxTemp = document.getElementsByClassName('max-temp');
 
-        this.clean();
+        weekWeather();
 
-        document.getElementById('city').innerText = data.city.name;
-        document.getElementById('temperature').innerHTML = this.convertTemperature(data.list[0].main.temp_max);
-        document.getElementById('description').innerText = data.list[0].weather[0].description;
-        document.getElementById('mainIcon').src = 'img/' + data.list[0].weather[0].icon + '.png';
-        document.getElementById('wind').innerText = data.list[0].wind.speed + ' m/s';
-        document.getElementById('presure').innerText = data.list[0].main.pressure + ' Pa';
-        document.getElementById('humidity').innerText = data.list[0].main.humidity + ' %';
+        document.getElementById('city').innerText = self.resultWeatherRequest.city.name;
+        document.getElementById('mainIcon').src = 'img/' + self.resultWeatherRequest.list[0].weather[0].icon + '.png';
+        document.getElementById('temperature').innerHTML = convertTemperature(self.resultWeatherRequest.list[0].main.temp_max) + '&#176;';
+        document.getElementById('description').innerText = self.resultWeatherRequest.list[0].weather[0].description;
+        document.getElementById('wind').innerText = self.resultWeatherRequest.list[0].wind.speed + ' m/s';
+        document.getElementById('presure').innerText = self.resultWeatherRequest.list[0].main.pressure + ' Pa';
+        document.getElementById('humidity').innerText = self.resultWeatherRequest.list[0].main.humidity + ' %';
 
-        this.displayDaysWeather();
-
-        for(var i = 0; i < this.week.length; i++){
-
-            dayTitle[i].innerHTML = this.week[i].toLocaleString('ru', {weekday: 'short'});
-            icons[i].getElementsByTagName('IMG')[0].src = 'img/' + this.iconWeek[i] + '.png';
-            maxTemp[i].innerHTML = this.convertTemperature(this.maximumWeekTemp[i]) + '&#176;';
-            minTemp[i].innerHTML = this.convertTemperature(this.minimumWeekTemp[i]) + '&#176;';
+        for (var i = 0; i < week.length - 1; i++) {
+            dayTitle[i].innerHTML = week[i].toLocaleString('ru', {weekday: 'short'});
+            icons[i].getElementsByTagName('IMG')[0].src = 'img/' + iconWeek[i] + '.png';
+            maxTemp[i].innerHTML = convertTemperature(maximumWeekTemp[i]) + '&#176;';
+            minTemp[i].innerHTML = convertTemperature(minimumWeekTemp[i]) + '&#176;';
         }
-    },
-    displayDaysWeather: function () {
-            this.getWeek();
+    };
 
-            // Получаем минимальную и максимальную температуру за сутки, иконки
-            for(var i = 0; i < this.week.length; i++){
-                var maximumDayTemperature = '', minimumDayTemperature = '', iconName = '';
-
-                this.resultWeatherRequest.list.forEach(function(item) {
-                    var time = new Date(item.dt * 1000);
-                    if(weather.week[i].getDate() === time.getDate()){
-                        if(item.main.temp_max > maximumDayTemperature || maximumDayTemperature.length === 0){
-                            maximumDayTemperature = item.main.temp_max;
-                            iconName = item.weather[0].icon;
-                        }
-                        if(item.main.temp_min < minimumDayTemperature || minimumDayTemperature.length === 0){
-                            minimumDayTemperature = item.main.temp_min;
-                        }
-                    }
-                });
-                weather.maximumWeekTemp.push(maximumDayTemperature);
-                weather.minimumWeekTemp.push(minimumDayTemperature);
-                weather.iconWeek.push(iconName);
-            }
-    },
-    setLocation: function(){
+    function setLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationFailure);
         } else {
             message.innerText = 'Geolocation is not supported!';
         }
+
         function geolocationSuccess(position) {
-            weather.lats = position.coords.latitude;
-            weather.longs = position.coords.longitude;
-            weather.weatherRequest();
+            lats = position.coords.latitude;
+            longs = position.coords.longitude;
+            weatherRequest();
         }
+
         function geolocationFailure(positionError) {
             var eror = positionError.code;
             if (eror === 1) {
@@ -95,104 +75,128 @@ var weather = {
                 message.innerHTML = 'Ошибка установить местоположение, попробуйте пожалуйста еще раз.'
             }
         }
-    },
-    getWeek: function () {
-        var temtpDateDay = '';
+    };
 
-        this.resultWeatherRequest.list.forEach(function (item) {
+    function weekWeather() {
+        maximumWeekTemp.length = 0;
+        minimumWeekTemp.length = 0;
+        iconWeek.length = 0;
+
+        getWeek();
+        // Получаем минимальную и максимальную температуру за сутки, иконки
+        for (var i = 0; i < week.length - 1; i++) {
+            var maximumDayTemperature = '', minimumDayTemperature = '', iconName = '';
+
+            self.resultWeatherRequest.list.forEach(function (item) {
+                var time = new Date(item.dt * 1000);
+                if (week[i].getDate() === time.getDate()) {
+                    if (item.main.temp_max > maximumDayTemperature || maximumDayTemperature.length === 0) {
+                        maximumDayTemperature = item.main.temp_max;
+                        iconName = item.weather[0].icon;
+                    }
+                    if (item.main.temp_min < minimumDayTemperature || minimumDayTemperature.length === 0) {
+                        minimumDayTemperature = item.main.temp_min;
+                    }
+                }
+            });
+            maximumWeekTemp.push(maximumDayTemperature);
+            minimumWeekTemp.push(minimumDayTemperature);
+            iconWeek.push(iconName);
+        }
+    };
+
+    function getWeek() {
+        var temtpDateDay = '';
+        self.resultWeatherRequest.list.forEach(function (item) {
             var date = new Date(item.dt * 1000);
-            if(temtpDateDay != date.getDate()){
-                weather.week.push(date);
+            if (temtpDateDay != date.getDate()) {
+                week.push(date);
                 temtpDateDay = date.getDate();
             }
         });
-    },
-    convertTemperature: function(valueTemp){
-        return (this.temperatureUnit === 'C') ?  Math.floor(valueTemp - 273) :  Math.floor(valueTemp - 241);
-    },
-    clean: function () {
-        this.maximumWeekTemp.length = 0;
-        this.minimumWeekTemp.length = 0;
-        this.iconWeek.length = 0;
+    };
+
+    function convertTemperature(valueTemp) {
+        return (this.temperatureUnit === 'C') ? Math.floor(valueTemp - 273) : Math.floor(valueTemp - 241);
+    };
+    document.getElementById('farengeit').onclick = function () {
+        temperatureUnit = 'F';
+        displayMainWeather();
+    };
+    document.getElementById('celsium').onclick = function () {
+        temperatureUnit = 'C';
+        displayMainWeather();
+    };
+    document.getElementById('location').onclick = function () {
+        setLocation();
+    };
+
+    weatherRequest();
+    citys();
+
+    input.addEventListener('keyup', function () {
+        dropdownList.innerHTML = '';
+        if (input.value.length) {
+            var seachText = input.value.toLowerCase();
+            searchCity(seachText);
+            console.log(seachText);
+        }
+    });
+
+    function searchCity(seachText) {
+        var cities = citytXml.getElementsByTagName('city'),
+            resultSearch = [],
+            resultsLat = [],
+            resultsLon = [];
+
+        for (var k = 0; k < cities.length; k++) {
+            var atr = cities[k].getAttribute('name').toLowerCase();
+            var lat = cities[k].getAttribute('lat');
+            var lon = cities[k].getAttribute('lon');
+
+            if (atr.indexOf(seachText) === 0) {
+                resultSearch.push(atr);
+                resultsLat.push(lat);
+                resultsLon.push(lon);
+            }
+        }
+        showResultSearch(resultSearch, resultsLat, resultsLon);
     }
-};
 
-document.getElementById('farengeit').onclick = function(){
-    weather.temperatureUnit = 'F';
-    weather.displayWeather();
-};
-document.getElementById('celsium').onclick = function(){
-    weather.temperatureUnit = 'C';
-    weather.displayWeather();
-};
-document.getElementById('location').onclick = function(){
-    weather.setLocation();
-};
-weather.weatherRequest();
+    function citys() {
+        var xmlDoc = new XMLHttpRequest();
+        xmlDoc.open('GET', 'js/city.xml', true);
+        xmlDoc.send();
+        xmlDoc.onreadystatechange = function () {
+            citytXml = xmlDoc.responseXML;
+        }
+    }
 
-//
-// function citys() {
-//     var xmlDoc = new XMLHttpRequest();
-//     xmlDoc.open('GET', 'js/city.xml', true);
-//     xmlDoc.send();
-//     xmlDoc.onreadystatechange = function(){
-//         citytXml = xmlDoc.responseXML;
-//     }
-// };
-//
-//
-// function searchCity(seachText) {
-//     var cities = citytXml.getElementsByTagName('city'),
-//         resultSearch = [],
-//         resultsLat = [],
-//         resultsLon = [];
-//
-//     for(var k = 0; k < cities.length; k++){
-//         var atr = cities[k].getAttribute('name').toLowerCase();
-//         var lat = cities[k].getAttribute('lat');
-//         var lon =  cities[k].getAttribute('lon');
-//
-//         if(atr.indexOf(seachText) === 0){
-//             resultSearch.push(atr);
-//             resultsLat.push(lat);
-//             resultsLon.push(lon);
-//
-//         }
-//     }
-//     showResultSearch(resultSearch, resultsLat, resultsLon);
-// }
+    function showResultSearch(resultSearch, resultsLat, resultsLon) {
+        for (var m = 0; m < resultSearch.length; m++) {
+            var li = document.createElement('li');
+            li.setAttribute('data-lon', resultsLon[m]);
+            li.setAttribute('data-lat', resultsLat[m]);
+            li.innerText = resultSearch[m];
+            dropdownList.appendChild(li);
+        }
+    }
 
-// var input = document.getElementById('myInput'),
-//     dropdownList = document.getElementById('dropdown-list');
-//
-//
-// input.addEventListener('keyup', function() {
-//     dropdownList.innerHTML = '';
-//     if(input.value.length){
-//         var seachText = input.value.toLowerCase();
-//         searchCity(seachText);
-//     }
-// });
+    dropdownList.onclick = function (event) {
+        dropdownList.innerHTML = '';
+        var target = event.target;
+        longs = target.getAttribute('data-lon');
+        lats = target.getAttribute('data-lat');
+        weatherRequest();
+    }
+}
 
-//
-// function showResultSearch(resultSearch, resultsLat, resultsLon) {
-//     for(var m = 0; m < resultSearch.length; m++){
-//         var li = document.createElement('li');
-//         li.setAttribute('data-lon', resultsLon[m]) ;
-//         li.setAttribute('data-lat', resultsLat[m]) ;
-//         li.innerText = resultSearch[m];
-//         dropdownList.appendChild(li);
-//     }
-//     console.log(resultSearch);
-// }
-//
+var weather = new Weather();
 
-// dropdownList.onclick = function (event) {
-//     var target = event.target;
-//
-//     longs = target.getAttribute('data-lon');
-//     lats = target.getAttribute('data-lat');
-//     weather(lats, longs);
-//
-//     dropdownList.innerHTML = '';
-// }
+
+
+
+
+
+
+

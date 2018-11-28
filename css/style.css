@@ -21,7 +21,6 @@ p{
     -webkit-box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
     box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
     border: 1px solid #eee;
-
 }
 .left{
     justify-content: flex-start;
@@ -133,16 +132,14 @@ p{
     outline: none;
 }
 #dropdown-list{
-    display: none;
     position: absolute;
     width: 100%;
-    padding: 10px 5px;
-    list-style: 18px;
     text-align: left;
     background-color: white;
     list-style: none;
 }
 #dropdown-list li{
+    padding: 10px 5px;
     cursor: pointer;
     font-size: 14px;
     line-height: 24px;
@@ -157,7 +154,6 @@ p{
 #description{
     text-align: right;
 }
-
 @media screen and (max-width: 600px){
     .container{
         margin-top: 0;
