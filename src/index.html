@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <section class="container">
+        <div class="header">
+            <div class="form">
+                <input class="form__input" id="form__input" type="text" placeholder='Search'>
+                <ul id="form__dropdown"></ul>
+            </div>
+            <div class="settings">
+                <span class="settings__units">
+                    <span id='farengeit'>&#8457;</span> | <span id="celsium">&#8451;</span>
+                </span>
+                <img id="location" class="settings__icon" src="img/location.png" alt="location">
+                <img id="settings" class="settings__icon" src="img/settings.png" alt="setings">
+                <div class="popup__body">
+                    <img class="popup__close-button" src="img/close.png" alt="close">
+                    <div class="popup__options">
+                        <div class="popup__elem">
+                            <input type="checkbox" class="popup__checkbox" id="checkbox1" />
+                            <label for="checkbox1">
+                                <span class="farengeit">&#8451; </span>| <span class="celsium">&#8457;</span>
+                            </label>
+                        </div>
+                        <div class="popup__elem">
+                            <input type="checkbox" class="popup__checkbox" id="checkbox2" />
+                            <label for="checkbox2">Темная тема</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="main__col col--temp">
+                <span id="temperature"></span>
+                <img id="mainIcon" alt="location">
+                <p id="description"></p>
+            </div>
+            <div class="main__col col--date">
+                <p id="city">City</p>
+                <p id="currentDate"></p>
+            </div>
+            <div class="main__col col--info">
+                <div>
+                    <img src="img/presure.png" alt="presure">
+                    <span id="presure"></span>
+                </div>
+                <div>
+                    <img src="img/arrow.png" alt="wind">
+                    <span id="wind"></span>
+                </div>
+            </div>
+        </div>
+        <div  class="charts">
+            <canvas id="myChart" height="80"></canvas>
+        </div>
+        <div class="days">
+            <div class="days__item" data-order="0" id="test">
+                <p class="days__title"></p>
+                <div class="days__icon">
+                    <img class="days__img" src="img/11d.png" alt="">
+                </div>
+                <div>
+                    <span class="days__max-temp"></span>
+                    <span class="days__min-temp"></span>
+                </div>
+            </div>
+            <div class="days__item" data-order="1" id="test2">
+                <p class="days__title"></p>
+                <div class="days__icon">
+                    <img class="days__img" src="img/11d.png" alt="">
+                </div>
+                <div>
+                    <span class="days__max-temp"></span>
+                    <span class="days__min-temp"></span>
+                </div>
+            </div>
+            <div class="days__item" data-order="2" id="test3">
+                <p class="days__title"></p>
+                <div class="days__icon">
+                    <img class="days__img" src="img/09d.png" alt="">
+                </div>
+                <div>
+                    <span class="days__max-temp"></span>
+                    <span class="days__min-temp"></span>
+                </div>
+            </div>
+            <div class="days__item" data-order="3" id="test4">
+                <p class="days__title"></p>
+                <div class="days__icon">
+                    <img class="days__img" src="img/13d.png" alt="">
+                </div>
+                <p class="day-temp">
+                    <span class="days__max-temp"></span>
+                    <span class="days__min-temp"></span>
+                </p>
+            </div>
+            <div class="days__item" data-order="4" id="test5">
+                <p class="days__title"></p>
+                <div class="days__icon">
+                    <img class="days__img" src="" alt="">
+                </div>
+                <div>
+                    <span class="days__max-temp"></span>
+                    <span class="days__min-temp"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="js/chart.min.js"></script>
+    <script src="js/display.js" defer></script>
+    <script src="js/weather.js" defer></script>
+    <script src="js/search.js" defer></script>
+</body>
+</html>
